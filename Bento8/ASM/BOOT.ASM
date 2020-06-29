@@ -1,7 +1,11 @@
-*********************************************
-* Boot loader / Routine de lecture disquette
-*********************************************
-(main)BOOT.ASS
+********************************************************************************
+* Bootloader / Routine de lecture disquette                                    *
+********************************************************************************
+* Auteur  : Benoit Rousseau                                                    *
+* Date    : 18/06/2020                                                         *
+* Licence : GNU General Public License                                         *
+********************************************************************************
+(main)BOOT.ASM
    setdp $60
    org $6200
    
@@ -25,8 +29,8 @@ DK_destination
    cmpa #$10                  * Si on depasse le secteur 16
    bhi DK_reinit_secteur      * on branche
 DK_retour_reinit_secteur      
-   inc DK_destination+1       * Increment de 256 octets de la zone a ecrire
-   ldd DK_destination+1       * Destination des donnees lues
+   inc DK_destination+1       * Increment de 256 octets de l'adresse RAM de destination
+   ldd DK_destination+1       * Charge dans le registre D l'adresse RAM de destination
 DK_dernier_bloc_a_ecrire      
    cmpd #$9E00                * Dernier bloc a ecrire (Attention a la pile systeme remontante en 9FFF au boot)
    bls DK_piste               

@@ -1,86 +1,85 @@
 package fr.bento8.to8.samples;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 
-import fr.bento8.to8.boot.BootLoader;
-import fr.bento8.util.properties.ReadProperties;
+import fr.bento8.to8.boot.Bootloader;
+import fr.bento8.to8.disk.FdUtil;
 
+/**
+ * @author Benoît Rousseau
+ * @version 1.0
+ *
+ */
 public class BuildBootDisk
 {
-	// Plan d'adressage - disquette taille 655360 octets (640ko)
-	// face (0-1) track (0-79) sector (1-16: 256 octets)
-	// face=0 track=0 sector=1 : 0 - 127 : Secteur d'amorçage
+	private final static String tempFile = "TMP.BIN";
+	private static String bootFile;
+	private static String mainFile;
+	private static String outputFileName;
+	private static String compiler;
 
-	static ReadProperties confProperties;
-	static byte[] fdBytes = new byte[655360];
-	static byte[] bootLoaderBytes;
-	static String tempFile = "TMP.BIN";
-
+	/**
+	 * Génère une image de disquette dans les formats .fd et .sd pour 
+	 * l'ordinateur Thomson TO8.
+	 * L'image de disquette contient un secteur d'amorçage et le code
+	 * principal qui sera chargé en mémoire par le code d'amorçage.
+	 * Ce programme n'utilise donc pas de système de fichier.
+	 * 
+	 * Plan d'adressage d'une disquette Thomson TO8 ou format .fd (655360 octets ou 640kiB)
+	 * Identifiant des faces: 0-1
+	 * Pour chaque face, identifiant des pistes: 0-79
+	 * Pour chaque piste, identifiant des secteurs: 1-16
+	 * Taille d'un secteur: 256 octets
+	 * Secteur d'amorçage: face=0 piste=0 secteur=1 octets=0-127
+	 * Le fichier .fd débute donc avec les 127 octets du secteur d'amorçage. 
+	 * 
+	 * Le format .sd (1310720 octets ou 1,25MiB) reprend la même structure que le format .fd mais ajoute
+	 * 256 octets à la fin de chaque secteur avec la valeur FF
+	 * 
+	 * Remarque i lest posible dans un fichier .fd ou .sd de concaténer deux disquettes
+	 * Cette fonctionnalité n'est pas implémentée ici.
+	 * 
+	 * @param args nom du fichier properties contenant les données de configuration
+	 */
 	public static void main(String[] args)
 	{
-		int face=0, track=0, sector=0;
-		// SD format : insère 256 octets FF après chaque secteur de la disquette Thomson 
+		// Chargement du fichier de configuration
+		try (InputStream input = new FileInputStream(args[0])) {
+			Properties prop = new Properties();
+			prop.load(input);
 
-		try {
-			confProperties = new ReadProperties(args[0]);
+			bootFile = prop.getProperty("bootfile");
+			mainFile = prop.getProperty("mainfile");
+			outputFileName = prop.getProperty("outputfile");
+			compiler = prop.getProperty("compiler");	
 
-			// ********** Load Boot code **********
+			FdUtil fd = new FdUtil();
 
-			// Generate binary code from assembly code
-			Files.deleteIfExists(Paths.get(tempFile));
-			Files.deleteIfExists(Paths.get("codes.lst"));
-			Process p = new ProcessBuilder(confProperties.compiler, "-oWE", confProperties.bootfile, tempFile).start();
-			BufferedReader br=new BufferedReader(new InputStreamReader(p.getInputStream()));
-			String line;
-			System.out.println("**************** COMPILE BOOT CODE ****************");
-			while((line=br.readLine())!=null){
-				System.out.println(line);
-			}
+			if (compile(bootFile) == 0) {
 
-			int result = p.waitFor();
-			if (result != 0) {
-				BootLoader bootLoader = new BootLoader();
-				bootLoaderBytes = bootLoader.encodeBootLoader(tempFile);
-				Files.deleteIfExists(Paths.get(tempFile));
+				// Traitement du binaire issu de la compilation et génération du secteur d'amorçage
+				Bootloader bootLoader = new Bootloader();
+				byte[] bootLoaderBytes = bootLoader.encodeBootLoader(tempFile);
 
-				// copy Bootloader to face 0 track 0 sector 1
-				for (int i=0; i<bootLoaderBytes.length; i++) {
-					fdBytes[i] = bootLoaderBytes[i];
-				}
+				fd.setIndex(0, 0, 1);
+				fd.write(bootLoaderBytes);
 
-				// ********** Load Main code **********
+				if (compile(mainFile) == 0) {
 
-				// Generate binary code from assembly code
-				Files.deleteIfExists(Paths.get(tempFile));
-				Files.deleteIfExists(Paths.get("codes.lst"));
-				p = new ProcessBuilder(confProperties.compiler, "-bd", confProperties.mainfile+".TMP", tempFile).start();
-				br=new BufferedReader(new InputStreamReader(p.getInputStream()));
-				System.out.println("**************** COMPILE MAIN CODE ****************");
-				while((line=br.readLine())!=null){
-					System.out.println(line);
-				}
+					// Ecriture du code principal
+					byte[] mainBytes = Files.readAllBytes(Paths.get(tempFile));
 
-				result = p.waitFor();
-				if (result != 0) {
-					// Write Main Code
-					face=0;
-					track=0;
-					sector=2;
-					byte[] mainBIN = Files.readAllBytes(Paths.get(tempFile));
-					System.out.println("Ecriture en :"+((face*327680)+(track*4096)+((sector-1)*256))+" ($"+String.format("%1$04X",((face*327680)+(track*4096)+((sector-1)*256)))+")");
-					for (int i = 0; i < mainBIN.length; i++) {
-						fdBytes[i+(face*327680)+(track*4096)+((sector-1)*256)] = mainBIN[i];
-					}
+					fd.setIndex(0, 0, 2);
+					fd.write(mainBytes);
 
-					// Write output file
-					Path outputfile = Paths.get(confProperties.outputfile);
-					Files.deleteIfExists(outputfile);
-					Files.createFile(outputfile);
-					Files.write(outputfile, fdBytes);
+					fd.save(outputFileName);
+					fd.saveToSd(outputFileName);
 				}
 			}
 		}
@@ -88,6 +87,38 @@ public class BuildBootDisk
 		{
 			e.printStackTrace(); 
 			System.out.println(e); 
+		}
+	}
+
+	/**
+	 * Effectue la compilation du code assembleur
+	 * 
+	 * @param asmFile fichier contenant le code assembleur a compiler
+	 * @return
+	 */
+	private static int compile(String asmFile) {
+		// l'option -bd permet la génération d'un binaire brut (sans entête)
+		try {
+			// Purge des fichiers temporaires
+			Files.deleteIfExists(Paths.get(tempFile));
+			Files.deleteIfExists(Paths.get("codes.lst"));
+
+			// Lancement de la compilation du fichier contenant le code de boot
+			System.out.println("**************** COMPILE "+asmFile+" ****************");
+			Process p = new ProcessBuilder(compiler, "-bd", asmFile, tempFile).start();
+			BufferedReader br=new BufferedReader(new InputStreamReader(p.getInputStream()));
+			String line;
+
+			while((line=br.readLine())!=null){
+				System.out.println(line);
+			}
+
+			return p.waitFor();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e); 
+			return -1;
 		}
 	}
 }
