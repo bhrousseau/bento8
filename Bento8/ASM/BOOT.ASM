@@ -8,7 +8,8 @@
 (main)BOOT.ASM
    setdp $60
    org $6200
-   
+
+   orcc #$50                  * desactive les interruptions      
    ldd #$6300                 * Adresse qui sera appellee lors du RTS dans le cas du boot
    std ,s                     * Enregistrement de l adresse dans la pile systeme
 DK_lecture                    

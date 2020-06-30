@@ -4,7 +4,7 @@
  * Fichier source      : ./ASM/MAIN.ASM
  * Fichier destination : TMP.BIN
  * Contenu :
- *     Main     0:MAIN.ASM     666
+ *     Main     0:MAIN.ASM     652
  *--------------------------------------------------------------*/
 
 Macro Pass
@@ -15,34 +15,34 @@ Pass2
      11                           *****************************************>>
      12                           * Debut du programme
      13                           *****************************************>>
-     14        6300               BEGIN
-     15  2     6300 1A   50              ORCC #$50     * desactive les inte>>
+     14        6300               DEBUT
+     15  2     6300 1A   50              orcc #$50     * desactive les inte>>
      16                            
      17                           *****************************************>>
      18                           * Initialisation de la palette en noir
      19                           *****************************************>>
      20
-     21  3     6302 CC   0000            LDD #$0000
-     22        6305               SETBLACKPALETTE
-     23  5     6305 B7   E7DB            STA $E7DB     * determine l'indice>>
-     24  5     6308 F7   E7DA            STB $E7DA     * set de la couleur >>
-     25  5     630B F7   E7DA            STB $E7DA   * set de la couleur Bl>>
-     26  2     630E 8B   02              ADDA #$02     * increment de l'ind>>
-     27  2     6310 81   20              CMPA #$20     * si on atteint 32 a>>
-     28  3     6312 26   F1              BNE    SETBLACKPALETTE
+     21  3     6302 CC   0000            ldd #$0000
+     22        6305               SETBLACK
+     23  5     6305 B7   E7DB            sta $E7DB     * determine l'indice>>
+     24  5     6308 F7   E7DA            stb $E7DA     * set de la couleur >>
+     25  5     630B F7   E7DA            stb $E7DA   * set de la couleur Bl>>
+     26  2     630E 8B   02              adda #$02     * increment de l'ind>>
+     27  2     6310 81   20              cmpa #$20     * si on atteint 32 a>>
+     28  3     6312 26   F1              bne    SETBLACK
      29                            
      30                           *****************************************>>
      31                           * Boucle infinie
      32                           *****************************************>>
      33
      34        6314               INFINITELOOP
-     35  3     6314 20   FE              BRA INFINITELOOP
+     35  3     6314 20   FE              bra INFINITELOOP
      36                            
 
 000000 Total Errors
 
 000003 Total Symbols
-     0x          Label 6300 BEGIN
+     0x          Label 6300 DEBUT
      1x          Label 6314 INFINITELOOP
-     1x          Label 6305 SETBLACKPALETTE
+     1x          Label 6305 SETBLACK
 
