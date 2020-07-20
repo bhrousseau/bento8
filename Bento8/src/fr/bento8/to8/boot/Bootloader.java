@@ -83,6 +83,11 @@ public class Bootloader {
 	}
 }
 
+//0E54 7E    JMP  E007   * Appuye sur B
+
+// Appuye sur C
+//E025 
+
 //E007 16    LBRA E028
 //E00A 16    LBRA E048
 //E00D 16    LBRA E02D
@@ -110,13 +115,13 @@ public class Bootloader {
 //E048 17    LBSR DFED
 //E04B 10 8E LDY  #627F
 //E04F 34    PSHS Y,
-//E051 86    LDA  #55                    *Init checksum
-//E053 6A    DEC  ,U                     *octet-1
-//E055 63    COM  ,U                     *Complément à 2
-//E057 AB    ADDA ,U+                    *On ajoute le contenu de l'octet au checksum et on avance
-//E059 11 A3 CMPU ,S                     *Compare U a S (fin du buffer)
-//E05C 26    BNE  E053                   *Non on continue a lire les octets
+//E051 86    LDA  #55     * Init checksum
+//E053 6A    DEC  ,U      * octet-1
+//E055 63    COM  ,U      * Complément à 2
+//E057 AB    ADDA ,U+     * On ajoute le contenu de l'octet au checksum et on avance
+//E059 11 A3 CMPU ,S      * Compare U a S (fin du buffer)
+//E05C 26    BNE  E053    * Non on continue a lire les octets
 //E05E 35    PULS Y,
-//E060 A1    CMPA ,U                     *On compare le chksum calculé (A) avec le chksum stocké sur Dsk (U)
-//E062 26    BNE  E067                   *Chksum KO on lance le Basic
-//E064 7E    JMP  6200                   *Chksum OK on lance le programme en 6200
+//E060 A1    CMPA ,U      * On compare le chksum calculé (A) avec le chksum stocké sur Dsk (U)
+//E062 26    BNE  E067    * Chksum KO on lance le Basic
+//E064 7E    JMP  6200    * Chksum OK on lance le programme en 6200
