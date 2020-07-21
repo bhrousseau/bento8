@@ -294,7 +294,7 @@ public class BasicConverter {
 		int linelength, lineNumber;
 		String lineNumberStr;
 
-		while (i<basBytes.length) {
+		while (i+10<basBytes.length) {
 			// Lecture ligne à ligne du fichier basic
 			linelength = basBytes[i++] << 8 & 0xFF00 | basBytes[i++] & 0xFF;
 			lineNumber = basBytes[i++] << 8 & 0xFF00 | basBytes[i++] & 0xFF;
@@ -302,95 +302,97 @@ public class BasicConverter {
 			System.out.println("Lecture ligne: "+lineNumberStr+" longueur: "+linelength);
 
 			// Ajout du numéro de ligne et de l'espace
-			 for (l = 0; l < lineNumberStr.length(); l++) {
-				 txtBytes[j++] = (byte) lineNumberStr.charAt(l);
-			 }
-			 txtBytes[j++] = (byte) 0x20;
+			for (l = 0; l < lineNumberStr.length(); l++) {
+				txtBytes[j++] = (byte) lineNumberStr.charAt(l);
+			}
+			txtBytes[j++] = (byte) 0x20;
+
+			//System.out.println(String.format("%02x", basBytes[i]));
 
 			while (basBytes[i] != (byte) 0x00) { // une fin de ligne se termine par la valeur 0x00
-				
+
 				// Gestion des caractères accentués
-				switch(basBytes[i++]) {
+				switch(basBytes[i]) {
 				case (byte) 0x16:
-					switch(basBytes[i++]) {
+					switch(basBytes[++i]) {
 					case (byte) 0x41:
-						switch(basBytes[i++]) {
+						switch(basBytes[++i]) {
 						case (byte) 0x61:
 							txtBytes[j++] = (byte) 0xe0; //à
-							break;
+						break;
 						case (byte) 0x65:
 							txtBytes[j++] = (byte) 0xe8; //è
-							break;
+						break;
 						case (byte) 0x75:
 							txtBytes[j++] = (byte) 0xf6; //ù
-							break;
+						break;
 						default:
 							//throw new IllegalStateException("Caractère accentué 0x16 0x41 "+String.format("0x%02X", basBytes[i-1])+" non reconnu.");
 							System.out.println("Caractère accentué 0x16 0x41 "+String.format("0x%02X", basBytes[i-1])+" non reconnu.");
 						}
 					case (byte) 0x42:
-						switch(basBytes[i++]) {
+						switch(basBytes[++i]) {
 						case (byte) 0x65:
 							txtBytes[j++] = (byte) 0xe9; //é
-							break;
+						break;
 						default:
 							//throw new IllegalStateException("Caractère accentué 0x16 0x42 "+String.format("0x%02X", basBytes[i-1])+" non reconnu.");
 							System.out.println("Caractère accentué 0x16 0x42 "+String.format("0x%02X", basBytes[i-1])+" non reconnu.");
 						}
 					case (byte) 0x43:
-						switch(basBytes[i++]) {
+						switch(basBytes[++i]) {
 						case (byte) 0x61:
 							txtBytes[j++] = (byte) 0xe2; //â
-							break;
+						break;
 						case (byte) 0x65:
 							txtBytes[j++] = (byte) 0xea; //ê
-							break;
+						break;
 						case (byte) 0x69:
 							txtBytes[j++] = (byte) 0xee; //î
-							break;
+						break;
 						case (byte) 0x6f:
 							txtBytes[j++] = (byte) 0xf4; //ô
-							break;
+						break;
 						case (byte) 0x75:
 							txtBytes[j++] = (byte) 0xfb; //û
-							break;
+						break;
 						default:
 							//throw new IllegalStateException("Caractère accentué 0x16 0x43 "+String.format("0x%02X", basBytes[i-1])+" non reconnu.");
 							System.out.println("Caractère accentué 0x16 0x43 "+String.format("0x%02X", basBytes[i-1])+" non reconnu.");
 						}
 					case (byte) 0x48:
-						switch(basBytes[i++]) {
+						switch(basBytes[++i]) {
 						case (byte) 0x65:
 							txtBytes[j++] = (byte) 0xeb; //ë
-							break;
+						break;
 						case (byte) 0x69:
 							txtBytes[j++] = (byte) 0xef; //ï
-							break;
+						break;
 						case (byte) 0x6f:
 							txtBytes[j++] = (byte) 0xf6; //ö
-							break;
+						break;
 						case (byte) 0x75:
 							txtBytes[j++] = (byte) 0xfc; //ü
-							break;
+						break;
 						default:
 							//throw new IllegalStateException("Caractère accentué 0x16 0x48 "+String.format("0x%02X", basBytes[i-1])+" non reconnu.");
 							System.out.println("Caractère accentué 0x16 0x48 "+String.format("0x%02X", basBytes[i-1])+" non reconnu.");
 						}
 					case (byte) 0x4b:
-						switch(basBytes[i++]) {
+						switch(basBytes[++i]) {
 						case (byte) 0x63:
 							txtBytes[j++] = (byte) 0xe7; //ç
-							break;
+						break;
 						default:
 							//throw new IllegalStateException("Caractère accentué 0x16 0x4b "+String.format("0x%02X", basBytes[i-1])+" non reconnu.");
 							System.out.println("Caractère accentué 0x16 0x4b "+String.format("0x%02X", basBytes[i-1])+" non reconnu.");
 						}
-						break;
+					break;
 					default:
 						//throw new IllegalStateException("Caractère accentué 0x16 "+String.format("0x%02X", basBytes[i-1])+" "+String.format("0x%02X", basBytes[i])+" non reconnu.");
 						System.out.println("Caractère accentué 0x16 "+String.format("0x%02X", basBytes[i-1])+" "+String.format("0x%02X", basBytes[i])+" non reconnu.");
 					}				
-					break;
+				break;
 				default:
 					// Gestion des mots clés Basic
 					//System.out.println(String.format("%02x", basBytes[i]));
@@ -398,24 +400,25 @@ public class BasicConverter {
 						for (k = 0; k < keywords[basBytes[i]+128].length; k++) {
 							txtBytes[j++] = keywords[basBytes[i]+128][k];
 						}
-						i++;
-					} else if (basBytes[i++] == (byte) 0xFF) {
+					} else if (basBytes[i] == (byte) 0xFF) {
 						// Gestion des fonctions Basic
-						if (basBytes[i] < -7) {
+						if (basBytes[++i] < -7) {
 							for (k = 0; k < functions[basBytes[i]+128].length; k++) {
 								txtBytes[j++] = functions[basBytes[i]+128][k];
 							}
-							i++;
 						} else {
 							throw new IllegalStateException("Fonction non reconnue 0xFF "+String.format("0x%02X", basBytes[i+1])+" non reconnu.");
 						}
 					} else {
 						// Caractère sans transcodage
-						txtBytes[j++] = basBytes[i++];
+						txtBytes[j++] = basBytes[i];
 					}
 				}
+				i++;
 			}
 			i++;
+			txtBytes[j++] = (byte) 0x0d;
+			txtBytes[j++] = (byte) 0x0a;
 		}
 		return txtBytes;
 	}	
