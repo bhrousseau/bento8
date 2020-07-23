@@ -33,6 +33,7 @@ public class BasToTxt
 			Files.deleteIfExists(outputFile);
 			Files.createFile(outputFile);
 			Files.write(outputFile, txtBytes);
+			System.out.println("Ecriture du fichier "+outputFile.getFileName()+" terminée.");
 
 		} catch (Exception e) {
 			e.printStackTrace();

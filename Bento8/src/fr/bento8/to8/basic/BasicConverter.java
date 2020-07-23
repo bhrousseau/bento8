@@ -23,7 +23,7 @@ public class BasicConverter {
 			{0x52, 0x45, 0x41, 0x44},	//	0x85	READ
 			{},	//	0x86	
 			{0x47, 0x4f},	//	0x87	GO
-			{},	//	0x88	
+			{0x52, 0x55, 0x4e},	//	0x88	RUN	(absent du tableau de pulkomandy)
 			{0x49, 0x46},	//	0x89	IF
 			{0x52, 0x45, 0x53, 0x54, 0x4f, 0x52, 0x45},	//	0x8A	RESTORE
 			{0x52, 0x45, 0x54, 0x55, 0x52, 0x4e},	//	0x8B	RETURN
@@ -65,7 +65,7 @@ public class BasicConverter {
 			{},	//	0xAF	
 			{0x4b, 0x45, 0x59},	//	0xB0	KEY
 			{},	//	0xB1	
-			{},	//	0xB2	
+			{0x4c, 0x4f, 0x41, 0x44},	//	0xB2	LOAD	(absent du tableau de pulkomandy)
 			{0x4c, 0x4f, 0x41, 0x44},	//	0xB3	LOAD
 			{},	//	0xB4	
 			{0x4f, 0x50, 0x45, 0x4e},	//	0xB5	OPEN
@@ -77,7 +77,7 @@ public class BasicConverter {
 			{0x54, 0x4f},	//	0xBB	TO
 			{0x53, 0x55, 0x42},	//	0xBC	SUB
 			{0x46, 0x4e},	//	0xBD	FN
-			{},	//	0xBE	
+			{0x53, 0x50, 0x43},	//	0xBE	SPC	(absent du tableau de pulkomandy)	
 			{0x55, 0x53, 0x49, 0x4e, 0x47},	//	0xBF	USING
 			{},	//	0xC0	
 			{0x45, 0x52, 0x4c},	//	0xC1	ERL
@@ -90,7 +90,7 @@ public class BasicConverter {
 			{0x2d},	//	0xC8	-
 			{0x45, 0x4e, 0x44},	//	0xC9	*
 			{0x2f},	//	0xCA	/
-			{},	//	0xCB	
+			{0x5e},	//	0xCB	^	(absent du tableau de pulkomandy)
 			{0x41, 0x4e, 0x44},	//	0xCC	AND
 			{0x4f, 0x52},	//	0xCD	OR
 			{},	//	0xCE	
@@ -135,7 +135,7 @@ public class BasicConverter {
 			{},	//	0xF5	
 			{},	//	0xF6	
 			{},	//	0xF7	
-			{0x54, 0x55, 0x52, 0x54, 0x4c, 0x45},	//	0xF8	TURTLE
+			{0x54, 0x55, 0x52, 0x54, 0x4c, 0x45}	//	0xF8	TURTLE
 	};
 
 	public static byte[][] functions = {
@@ -151,7 +151,7 @@ public class BasicConverter {
 			{},	//	0x89	
 			{0x50, 0x45, 0x45, 0x4b},	//	0x8A	PEEK
 			{0x4c, 0x45, 0x4e},	//	0x8B	LEN
-			{},	//	0x8C	
+			{0x53, 0x54, 0x52, 0x24},	//	0x8C	STR$	(absent du tableau de pulkomandy)
 			{0x56, 0x41, 0x4c},	//	0x8D	VAL
 			{0x41, 0x53, 0x43},	//	0x8E	ASC
 			{0x43, 0x48, 0x52, 0x24},	//	0x8F	CHR$
@@ -202,88 +202,26 @@ public class BasicConverter {
 			{0x48, 0x45, 0x41, 0x44},	//	0xBC	HEAD
 			{0x52, 0x4f, 0x54},	//	0xBD	ROT
 			{0x53, 0x48, 0x4f, 0x57},	//	0xBE	SHOW
-			{0x5a, 0x4f, 0x4f, 0x4d},	//	0xBF	ZOOM
-			{},	//	0xC0	
-			{},	//	0xC1	
-			{},	//	0xC2	
-			{},	//	0xC3	
-			{},	//	0xC4	
-			{},	//	0xC5	
-			{},	//	0xC6	
-			{},	//	0xC7	
-			{},	//	0xC8	
-			{},	//	0xC9	
-			{},	//	0xCA	
-			{},	//	0xCB	
-			{},	//	0xCC	
-			{},	//	0xCD	
-			{},	//	0xCE	
-			{},	//	0xCF	
-			{},	//	0xD0	
-			{},	//	0xD1	
-			{},	//	0xD2	
-			{},	//	0xD3	
-			{},	//	0xD4	
-			{},	//	0xD5	
-			{},	//	0xD6	
-			{},	//	0xD7	
-			{},	//	0xD8	
-			{},	//	0xD9	
-			{},	//	0xDA	
-			{},	//	0xDB	
-			{},	//	0xDC	
-			{},	//	0xDD	
-			{},	//	0xDE	
-			{},	//	0xDF	
-			{},	//	0xE0	
-			{},	//	0xE1	
-			{},	//	0xE2	
-			{},	//	0xE3	
-			{},	//	0xE4	
-			{},	//	0xE5	
-			{},	//	0xE6	
-			{},	//	0xE7	
-			{},	//	0xE8	
-			{},	//	0xE9	
-			{},	//	0xEA	
-			{},	//	0xEB	
-			{},	//	0xEC	
-			{},	//	0xED	
-			{},	//	0xEE	
-			{},	//	0xEF	
-			{},	//	0xF0	
-			{},	//	0xF1	
-			{},	//	0xF2	
-			{},	//	0xF3	
-			{},	//	0xF4	
-			{},	//	0xF5	
-			{},	//	0xF6	
-			{},	//	0xF7	
-			{}	//	0xF8	
+			{0x5a, 0x4f, 0x4f, 0x4d}	//	0xBF	ZOOM
 	};
 
 	public BasicConverter() {
-
 	}
 
 	public void load(String fileName) {
 		try {
-			basBytes = Files.readAllBytes(Paths.get(fileName));
+			basBytes = Files.readAllBytes(Paths.get(fileName));										// Lecture de l'en-tête du fichier .bas
 
-			// Lecture de l'en-tête
-			// Octet 0   : 0xff (Type du fichier)
-			// Octet 1-2 : Longueur du fichier
-			
 			byte fileType = basBytes[0];
-			if (fileType != (byte) 0xff) {
-				throw new IllegalStateException("Type de fichier non reconnu: Le premier octet "+fileType+" n'est pas 0xff");
+			if (fileType != (byte) 0xff) {															// Octet 0   : 0xff (Type du fichier)
+				throw new IllegalStateException("Type de fichier non reconnu: Le premier octet "+
+						fileType+" n'est pas 0xff");
 			}
 
-			fileSize = basBytes[1] << 8 & 0xFF00 | basBytes[2] & 0xFF;
+			fileSize = basBytes[1] << 8 & 0xff00 | basBytes[2] & 0xff;								// Octet 1-2 : Longueur du fichier
 			System.out.println("Taille du fichier "+fileName+": "+fileSize+" octets.");
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -294,8 +232,8 @@ public class BasicConverter {
 			return null;
 		}
 
-		byte[] txtBytes = new byte[basBytes.length*8]; // On réserve de l'espace supplémentaire pour le remplacement des codes par les mots clés
-		int i=3, j=0, k, l; // La première ligne commence a l'index 3
+		byte[] txtBytes = new byte[basBytes.length*8];												// On réserve de l'espace supplémentaire pour le remplacement des codes par les mots clés
+		int i=3, j=0, k, l;																			// La première ligne commence a l'index 3
 		int linelength, lineNumber;
 		String lineNumberStr;
 
@@ -306,61 +244,73 @@ public class BasicConverter {
 			lineNumberStr = String.valueOf(lineNumber);
 			System.out.println("Lecture ligne: "+lineNumberStr+" longueur: "+linelength);
 
-			// Ajout du numéro de ligne et de l'espace
-			for (l = 0; l < lineNumberStr.length(); l++) {
+			for (l = 0; l < lineNumberStr.length(); l++) {											// ajout du numéro de ligne
 				txtBytes[j++] = (byte) lineNumberStr.charAt(l);
 			}
-			txtBytes[j++] = (byte) 0x20;
+			txtBytes[j++] = (byte) 0x20;															// ajout d'un espace
 
-			//System.out.println(String.format("%02x", basBytes[i]));
-
-			while (basBytes[i] != (byte) 0x00) { // une fin de ligne se termine par la valeur 0x00
-
-				// Gestion des caractères accentués
-				if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x41 && basBytes[i+2] == (byte) 0x61) {txtBytes[j++] = (byte) 0xe0; i+=3;} //à
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x41 && basBytes[i+2] == (byte) 0x65) {txtBytes[j++] = (byte) 0xe8; i+=3;} //è
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x41 && basBytes[i+2] == (byte) 0x75) {txtBytes[j++] = (byte) 0xf6; i+=3;} //ù
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x42 && basBytes[i+2] == (byte) 0x65) {txtBytes[j++] = (byte) 0xe9; i+=3;} //é
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x43 && basBytes[i+2] == (byte) 0x61) {txtBytes[j++] = (byte) 0xe2; i+=3;} //â
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x43 && basBytes[i+2] == (byte) 0x65) {txtBytes[j++] = (byte) 0xea; i+=3;} //ê
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x43 && basBytes[i+2] == (byte) 0x69) {txtBytes[j++] = (byte) 0xee; i+=3;} //î
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x43 && basBytes[i+2] == (byte) 0x6f) {txtBytes[j++] = (byte) 0xf4; i+=3;} //ô
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x43 && basBytes[i+2] == (byte) 0x75) {txtBytes[j++] = (byte) 0xfb; i+=3;} //û
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x48 && basBytes[i+2] == (byte) 0x65) {txtBytes[j++] = (byte) 0xeb; i+=3;} //ë
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x48 && basBytes[i+2] == (byte) 0x69) {txtBytes[j++] = (byte) 0xef; i+=3;} //ï
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x48 && basBytes[i+2] == (byte) 0x6f) {txtBytes[j++] = (byte) 0xf6; i+=3;} //ö
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x48 && basBytes[i+2] == (byte) 0x75) {txtBytes[j++] = (byte) 0xfc; i+=3;} //ü
-				else if (basBytes[i] == (byte) 0x16 && basBytes[i+1] == (byte) 0x4b && basBytes[i+2] == (byte) 0x63) {txtBytes[j++] = (byte) 0xe7; i+=3;} //ç
-				else if (basBytes[i] == (byte) 0x16) {System.out.println("Caractère accentué "+String.format("0x%02X", basBytes[i])+" "+String.format("0x%02X", basBytes[i+1])+" "+String.format("0x%02X", basBytes[i+2])+" non reconnu."); i+=3;}
-				else {
-					// Gestion des mots clés Basic
-					//System.out.println(String.format("%02x", basBytes[i]));
-					if (basBytes[i] <= (byte) 0xf8) { // La table s'arrête a 0xf8
-						for (k = 0; k < keywords[basBytes[i]+128].length; k++) {
-							txtBytes[j++] = keywords[basBytes[i]+128][k];
-						}
-					} else if (basBytes[i] == (byte) 0xFF) {
-						
-						// Gestion des fonctions Basic
-						if (basBytes[++i] <= (byte) 0xf8) { // La table s'arrête a 0xf8
-							for (k = 0; k < functions[basBytes[i]+128].length; k++) {
-								txtBytes[j++] = functions[basBytes[i]+128][k];
-							}
-						} else {
-							throw new IllegalStateException("Fonction non reconnue 0xFF "+String.format("0x%02X", basBytes[i+1])+" non reconnu.");
+			while (basBytes[i] != (byte) 0x00) { 													// une fin de ligne se termine par la valeur 0x00
+				if (basBytes[i] == (byte) 0x16) { 													// caractères accentués
+					if (basBytes[i+1] == (byte) 0x41) { 											// - accent grave
+						if (basBytes[i+2] == (byte) 0x61) {txtBytes[j++] = (byte) 0xe0; i+=3;} 		// à
+						else if (basBytes[i+2] == (byte) 0x65) {txtBytes[j++] = (byte) 0xe8; i+=3;} // è
+						else if (basBytes[i+2] == (byte) 0x75) {txtBytes[j++] = (byte) 0xf6; i+=3;} // ù
+					} else if (basBytes[i+1] == (byte) 0x42) { 										// - accent aigu
+						if (basBytes[i+2] == (byte) 0x65) {txtBytes[j++] = (byte) 0xe9; i+=3;} 		// é
+					} else if (basBytes[i+1] == (byte) 0x43) { 										// - accent circonflexe
+						if (basBytes[i+2] == (byte) 0x61) {txtBytes[j++] = (byte) 0xe2; i+=3;}		// â
+						else if (basBytes[i+2] == (byte) 0x65) {txtBytes[j++] = (byte) 0xea; i+=3;} // ê
+						else if (basBytes[i+2] == (byte) 0x69) {txtBytes[j++] = (byte) 0xee; i+=3;} // î
+						else if (basBytes[i+2] == (byte) 0x6f) {txtBytes[j++] = (byte) 0xf4; i+=3;} // ô
+						else if (basBytes[i+2] == (byte) 0x75) {txtBytes[j++] = (byte) 0xfb; i+=3;} // û
+					} else if (basBytes[i+1] == (byte) 0x48) { 										// - tréma
+						if (basBytes[i+2] == (byte) 0x65) {txtBytes[j++] = (byte) 0xeb; i+=3;}		// ë
+						else if (basBytes[i+2] == (byte) 0x69) {txtBytes[j++] = (byte) 0xef; i+=3;} // ï
+						else if (basBytes[i+2] == (byte) 0x6f) {txtBytes[j++] = (byte) 0xf6; i+=3;} // ö
+						else if (basBytes[i+2] == (byte) 0x75) {txtBytes[j++] = (byte) 0xfc; i+=3;} // ü
+					} else if (basBytes[i+1] == (byte) 0x4b) { 										// - cédille
+						if (basBytes[i+2] == (byte) 0x63) {txtBytes[j++] = (byte) 0xe7; i+=3;} 		// ç
+					}
+					else {
+						System.out.println("Caractère accentué "+
+								String.format("0x%02X", basBytes[i])+" "+
+								String.format("0x%02X", basBytes[i+1])+" "+
+								String.format("0x%02X", basBytes[i+2])+
+								" non reconnu.");
+						i+=3;}
+				} else if (basBytes[i] == (byte) 0xff) {											// Gestion des fonctions Basic
+					i++;																			// on se positione après la balise 0xff
+					if (basBytes[i] <= (byte) 0xbf && functions[basBytes[i]+128].length > 0) { 		// test de la valeur la plus haute du tableau de correspondance et vérification de la présence d'une valeur
+						for (k = 0; k < functions[basBytes[i]+128].length; k++) { 					// +128 positionne la valeur 0x80 à l'index 0 du tableau
+							txtBytes[j++] = functions[basBytes[i]+128][k];							// écriture lettre à lettre du nom de fonction
 						}
 					} else {
-						// Caractère sans transcodage
+						System.out.println("Fonction 0xFF "+
+								String.format("0x%02X", basBytes[i])+
+								" non reconnue.");
 						txtBytes[j++] = basBytes[i];
 					}
-					i++;
+				} else if (basBytes[i] < (byte) 0xff) { 											// Gestion des mots clés Basic
+					if (basBytes[i] <= (byte) 0xf8 && keywords[basBytes[i]+128].length > 0) { 		// test de la valeur la plus haute du tableau de correspondance et vérification de la présence d'une valeur
+						for (k = 0; k < keywords[basBytes[i]+128].length; k++) {					// +128 positionne la valeur 0x80 à l'index 0 du tableau
+							txtBytes[j++] = keywords[basBytes[i]+128][k];							// écriture lettre à lettre du nom de mot clé
+						}
+					} else {
+						System.out.println("Mot clé "+
+								String.format("0x%02X", basBytes[i])+
+								" non reconnu.");
+						txtBytes[j++] = basBytes[i];
+					}
+				} else {
+					txtBytes[j++] = basBytes[i];													// Caractère sans transcodage
 				}
+				i++;
 			}
 			i++;
-			// Ajout d'un retour à la ligne
-			txtBytes[j++] = (byte) 0x0d;
+			txtBytes[j++] = (byte) 0x0d;															// Ajout d'un retour à la ligne
 			txtBytes[j++] = (byte) 0x0a;
 		}
+		System.out.println("Conversion terminée.");
 		return txtBytes;
 	}	
 }
