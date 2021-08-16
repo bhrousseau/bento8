@@ -1,48 +1,124 @@
 /*--------------------------------------------------------------*
  * Compilé avec C6809 v0.83                                     *
  *--------------------------------------------------------------*
- * Fichier source      : ./ASM/MAIN.ASM
+ * Fichier source      : ./ASM/Boot-CheckerBoard.ASM
  * Fichier destination : TMP.BIN
  * Contenu :
- *     Main     0:MAIN.ASM     652
+ *     Main     0:BOOT.ASM     1450
  *--------------------------------------------------------------*/
 
 Macro Pass
 Pass1
 Pass2
-      9        6300                      ORG $6300
-     10
-     11                           *****************************************>>
-     12                           * Debut du programme
-     13                           *****************************************>>
-     14        6300               DEBUT
-     15  2     6300 1A   50              orcc #$50     * desactive les inte>>
-     16                            
-     17                           *****************************************>>
-     18                           * Initialisation de la palette en noir
-     19                           *****************************************>>
-     20
-     21  3     6302 CC   0000            ldd #$0000
-     22        6305               SETBLACK
-     23  5     6305 B7   E7DB            sta $E7DB     * determine l'indice>>
-     24  5     6308 F7   E7DA            stb $E7DA     * set de la couleur >>
-     25  5     630B F7   E7DA            stb $E7DA   * set de la couleur Bl>>
-     26  2     630E 8B   02              adda #$02     * increment de l'ind>>
-     27  2     6310 81   20              cmpa #$20     * si on atteint 32 a>>
-     28  3     6312 26   F1              bne    SETBLACK
-     29                            
-     30                           *****************************************>>
-     31                           * Boucle infinie
-     32                           *****************************************>>
-     33
-     34        6314               INFINITELOOP
-     35  3     6314 20   FE              bra INFINITELOOP
-     36                            
+     11        6200                       org   $6200
+     12
+     13        6200               InitVideo
+     14  2     6200 1A   50               orcc  #$50                     ; >>
+     15  4     6202 10CE 9FFF            lds   #$9FFF                   ; p>>
+     16  2     6206 86   7B               lda   #$7B                     ; >>
+     17  5     6208 B7   E7DC             sta   $E7DC
+     18                            
+     19  5     620B F6   6081             ldb   $6081                    ; >>
+     20  2     620E CA   10               orb   #$10                     ; >>
+     21  5     6210 F7   6081             stb   $6081                    ; >>
+     22  5     6213 F7   E7E7             stb   $E7E7                    ; >>
+     23  2     6216 C6   00              ldb   #$00
+     24  5     6218 F7   E7E5             stb   $E7E5                    ; >>
+     25                            
+     26  3     621B 8E   0707            ldx   #$0707                   ; a>>
+     27  8     621E BD   6280             jsr   ClearInterlacedEvenDataMemo>>
+     28  3     6221 8E   7070            ldx   #$7070                   ; a>>
+     29  8     6224 BD   6292             jsr   ClearInterlacedOddDataMemor>>
+     30                            
+     31  3     6227 20   FE               bra   *                        ; >>
+     32                            
+     33        6229                          rmb   79,0
+     34                            
+     35        6278               pal_buffer
+     36        6278 42                    fcb   $42                      ; >>
+     37        6279 41                    fcb   $41                      ; >>
+     38        627A 53                    fcb   $53                      ; >>
+     39        627B 49                    fcb   $49                      ; >>
+     40        627C 43                    fcb   $43                      ; >>
+     41        627D 32                    fcb   $32                      ; >>
+     42                            
+     43        627E               pal_idx
+     44        627E 00                    fcb   $00                      ;
+     45        627F 00                    fcb   $00                      ;
+     46                            
+     47                           *---------------------------------------->>
+     48                           * A partir de ce point le code doit comme>>
+     49                           *---------------------------------------->>
+     50
+     51        6280               ClearInterlacedEvenDataMemory
+     52  2     6280 C6   18               ldb   #$18
+     53  5     6282 F7   62AB             stb   CIDM_a_start+3
+     54  5     6285 F7   62CA             stb   CIDM_b_start+3
+     55  2     6288 C6   00               ldb   #0
+     56  5     628A F7   62C1             stb   CIDM_a_end+3
+     57  5     628D F7   62D8             stb   CIDM_b_end+3
+     58  3     6290 20   10               bra   ClearInterlacedDataMemory
+     59
+     60        6292               ClearInterlacedOddDataMemory
+     61  2     6292 C6   40               ldb   #$40
+     62  5     6294 F7   62AB             stb   CIDM_a_start+3
+     63  5     6297 F7   62CA             stb   CIDM_b_start+3
+     64  2     629A C6   28               ldb   #$28
+     65  5     629C F7   62C1             stb   CIDM_a_end+3
+     66  5     629F F7   62D8             stb   CIDM_b_end+3
+     67                            
+     68        62A2               ClearInterlacedDataMemory
+     69  5+3   62A2 34   48               pshs  u,dp
+     70  7     62A4 10FF 62E0             sts   CIDM_end+2
+     71                            
+     72        62A8               CIDM_a_start
+     73  4     62A8 10CE DF40             lds   #$DF40                   ; >>
+     74  4+0   62AC 33   84               leau  ,x
+     75  4+0   62AE 31   84               leay  ,x
+     76  6     62B0 1F   10               tfr   x,d
+     77  6     62B2 1F   8B               tfr   a,dp
+     78        62B4               CIDM_a
+     79  5+9   62B4 34   7E               pshs  u,y,x,dp,b,a
+     80  5+9   62B6 34   7E               pshs  u,y,x,dp,b,a
+     81  5+9   62B8 34   7E               pshs  u,y,x,dp,b,a
+     82  5+9   62BA 34   7E               pshs  u,y,x,dp,b,a
+     83  5+4   62BC 34   60               pshs  u,y
+     84        62BE               CIDM_a_end
+     85  5     62BE 118C C000             cmps  #$C000
+     86  4+1   62C2 32   E8 D8            leas  -40,s
+     87  3     62C5 26   ED               bne   CIDM_a
+     88                            
+     89        62C7               CIDM_b_start
+     90  4     62C7 10CE BF40             lds   #$BF40                   ; >>
+     91        62CB               CIDM_b
+     92  5+9   62CB 34   7E               pshs  u,y,x,dp,b,a
+     93  5+9   62CD 34   7E               pshs  u,y,x,dp,b,a
+     94  5+9   62CF 34   7E               pshs  u,y,x,dp,b,a
+     95  5+9   62D1 34   7E               pshs  u,y,x,dp,b,a
+     96  5+4   62D3 34   60               pshs  u,y
+     97        62D5               CIDM_b_end
+     98  5     62D5 118C A000             cmps  #$A000
+     99  4+1   62D9 32   E8 D8            leas  -40,s
+    100  3     62DC 26   ED               bne   CIDM_b
+    101                            
+    102        62DE               CIDM_end
+    103  4     62DE 10CE 0000             lds   #$0000
+    104  5+5   62E2 35   C8               puls  dp,u,pc
 
 000000 Total Errors
 
-000003 Total Symbols
-     0x          Label 6300 DEBUT
-     1x          Label 6314 INFINITELOOP
-     1x          Label 6305 SETBLACK
+000013 Total Symbols
+     1x          Label 62B4 CIDM_a
+     2x          Label 62BE CIDM_a_end
+     2x          Label 62A8 CIDM_a_start
+     1x          Label 62CB CIDM_b
+     2x          Label 62D5 CIDM_b_end
+     2x          Label 62C7 CIDM_b_start
+     1x          Label 62DE CIDM_end
+     1x          Label 62A2 ClearInterlacedDataMemory
+     1x          Label 6280 ClearInterlacedEvenDataMemory
+     1x          Label 6292 ClearInterlacedOddDataMemory
+     0x          Label 6200 InitVideo
+     0x          Label 6278 pal_buffer
+     0x          Label 627E pal_idx
 
